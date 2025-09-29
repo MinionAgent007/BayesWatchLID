@@ -5,37 +5,6 @@ import csv
 import os
 from PIL import Image
 
-# print("hello twins")
-
-# np.random.seed(0)
-
-# input_image = np.random.random([1, 5, 5, 1])
-
-# conv_layer = tf.keras.layers.Conv2D(filters=3, kernel_size=(3, 3), strides=(1, 1), padding='valid')
-
-# output = conv_layer(input_image)
-
-# print("Shape of output:", output.shape)
-# print("Output of the convolution:", output.numpy())
-
-training_data_path = "../data/train/_annotations.csv"
-training_file = pd.read_csv(training_data_path)
-
-# insert function to grab all images but as boxes
-
-model = tf.keras.models.Sequential([
-  tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-  tf.keras.layers.MaxPooling2D(2, 2),
-  tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-  tf.keras.layers.MaxPooling2D(2,2),
-  tf.keras.layers.Flatten(),
-  tf.keras.layers.Dense(128, activation='relu'),
-  tf.keras.layers.Dense(10, activation='softmax')
-])
-
-model.compile(optimizer="RMSprop", loss="sparse_categorical_crossentropy", metrics=['accuracy'])
-model.fit()
-
 names = []
 annot = []
 
@@ -69,5 +38,23 @@ for i in range(len(annot)):
         except ValueError:
             continue
 
-print(images)
-print(labels)
+# print(images)
+# print(labels)
+
+images_np = np.array(images)
+labels_np = np.array(labels)
+
+model = tf.keras.models.Sequential([
+  tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+  tf.keras.layers.MaxPooling2D(2, 2),
+  tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+  tf.keras.layers.MaxPooling2D(2,2),
+  tf.keras.layers.Flatten(),
+  tf.keras.layers.Dense(128, activation='relu'),
+  tf.keras.layers.Dense(10, activation='softmax')
+])
+
+model.compile(optimizer="RMSprop", loss="sparse_categorical_crossentropy", metrics=['accuracy'])
+model.fit(images_np, labels_np, epochs=3)
+training_loss, training_accuracy = model.evaluate(images_np, labels_np)
+print ('Training loss: {}, Training accuracy: {}'.format(training_loss, training_accuracy*100))
