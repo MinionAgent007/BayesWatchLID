@@ -1,4 +1,6 @@
+import numpy as np
 import tensorflow as tf
+import pandas as pd
 import csv
 import os
 from PIL import Image
@@ -36,5 +38,23 @@ for i in range(len(annot)):
         except ValueError:
             continue
 
-print(images)
-print(labels)
+# print(images)
+# print(labels)
+
+images_np = np.array(images)
+labels_np = np.array(labels)
+
+model = tf.keras.models.Sequential([
+  tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+  tf.keras.layers.MaxPooling2D(2, 2),
+  tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+  tf.keras.layers.MaxPooling2D(2,2),
+  tf.keras.layers.Flatten(),
+  tf.keras.layers.Dense(128, activation='relu'),
+  tf.keras.layers.Dense(10, activation='softmax')
+])
+
+model.compile(optimizer="RMSprop", loss="sparse_categorical_crossentropy", metrics=['accuracy'])
+model.fit(images_np, labels_np, epochs=3)
+training_loss, training_accuracy = model.evaluate(images_np, labels_np)
+print ('Training loss: {}, Training accuracy: {}'.format(training_loss, training_accuracy*100))
