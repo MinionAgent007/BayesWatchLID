@@ -18,6 +18,8 @@ import pandas as pd
 training_data_path = "../data/train/_annotations.csv"
 training_file = pd.read_csv(training_data_path)
 
+# insert function to grab all images but as boxes
+
 model = tf.keras.models.Sequential([
   tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
   tf.keras.layers.MaxPooling2D(2, 2),
@@ -27,3 +29,6 @@ model = tf.keras.models.Sequential([
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dense(10, activation='softmax')
 ])
+
+model.compile(optimizer="RMSprop", loss="sparse_categorical_crossentropy", metrics=['accuracy'])
+model.fit()
