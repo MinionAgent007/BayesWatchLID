@@ -1,9 +1,13 @@
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+
 import numpy as np
 import tensorflow as tf
-import pandas as pd
 import csv
 import os
 from PIL import Image
+
 
 names = []
 annot = []
@@ -41,8 +45,24 @@ for i in range(len(annot)):
 # print(images)
 # print(labels)
 
-images_np = np.array(images)
-labels_np = np.array(labels)
+# resize images
+
+target_size  = (100, 100)
+processed_imgs = []
+
+for img in images:
+    img_resized = img.resize(target_size)
+    img_rgb = img_resized.convert('RGB')
+    processed_imgs.append(img_rgb)
+
+images_np = np.array(processed_imgs, dtype=np.float32) / 255.0
+
+unique_labels = sorted(list(set(labels)))
+label_to_int = {label: i for i, label in enumerate(unique_labels)}
+labels_as_integers = [label_to_int[label] for label in labels]
+
+labels_np = np.array(labels_as_integers)
+
 
 model = tf.keras.models.Sequential([
   tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
