@@ -47,7 +47,7 @@ for i in range(len(annot)):
 
 # resize images
 
-target_size  = (100, 100)
+target_size  = (120, 120)
 processed_imgs = []
 
 for img in images:
