@@ -1,0 +1,40 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE configs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+
+# Testing / coverage
+.coverage
+*.cover
+*.py,cover
+.cache/
+.tox/
+.nox/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Project-specific
+data/
